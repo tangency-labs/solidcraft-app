@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" data-reads-format="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; frame-src https://docs.solidcraft.io; base-uri 'none'; form-action 'none'">
+<title>Bring your designs to SolidCraft's new address</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 44rem; margin: 2.5rem auto; padding: 0 1rem; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { text-align: left; padding: .4rem .6rem .4rem 0; border-bottom: 1px solid #8884; }
+  td:first-child { overflow-wrap: anywhere; }
+  td.size, th:nth-child(2) { white-space: nowrap; }
+  .warn { display: block; color: #b45309; font-size: .9em; }
+  @media (prefers-color-scheme: dark) { .warn { color: #fbbf24; } }
+  button { font: inherit; font-weight: 600; padding: .5rem 1.2rem; }
+  ul { padding-left: 1.2rem; }
+  li { overflow-wrap: anywhere; }
+  iframe { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Bring your designs to the new address</h1>
+  <p>The SolidCraft web app moved from docs.solidcraft.io/app/ to app.solidcraft.io. A browser keeps
+  what you save separately for each address, so designs you saved at the old one don't appear here
+  until you copy them. The originals stay at the old address: nothing there is changed or deleted.</p>
+
+  <p id="status" role="status">Looking for designs at the old address…</p>
+  <table id="table" hidden>
+    <thead><tr><th>Design</th><th>Size</th></tr></thead>
+    <tbody id="rows"></tbody>
+  </table>
+  <p id="settings-note" hidden>Your settings come too, unless this address already has its own.</p>
+  <p><button id="bring" hidden>Bring these over</button></p>
+
+  <section id="result" role="status" hidden>
+    <h2>Done</h2>
+    <ul id="outcome"></ul>
+    <p id="settings-outcome"></p>
+    <p><a href="./">Open SolidCraft</a>. If it's already open in another tab, reload that tab to see the designs.</p>
+  </section>
+
+  <section id="fallback" hidden>
+    <h2 id="fallback-title">Copy them by hand</h2>
+    <p id="fallback-why"></p>
+    <ol>
+      <li>Open <a href="https://docs.solidcraft.io/app-transfer.html">the page at the old address</a> in this browser.</li>
+      <li>Save each design as a file with its button. The <a href="https://docs.solidcraft.io/app/">old app</a> can do the same: File &gt; Files in this browser…, then Download beside each design.</li>
+      <li>In <a href="./">SolidCraft</a>, open each file with File &gt; Open.</li>
+    </ol>
+  </section>
+
+  <h2>If a design won't open</h2>
+  <p>The old address ran the newest development builds until November 3, 2026, so a design saved there
+  may be newer than this release can read. It's still safe: try it in the
+  <a href="https://app-rc.solidcraft.io/">release candidate</a>, which keeps its own storage too.
+  Save the design as a file from <a href="https://docs.solidcraft.io/app-transfer.html">the page at the old address</a>
+  and open that file in the release candidate.</p>
+  <p>Designs you saved to a file on your computer were never in the browser's storage. Open them here with File &gt; Open.</p>
+</main>
+<script src="move-designs.js"></script>
+</body>
+</html>

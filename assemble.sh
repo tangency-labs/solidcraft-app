@@ -41,6 +41,18 @@ if [ -n "$tag" ]; then
   cp -R "$tmp"/unpacked/*/. "$site"/
   test -s "$site/index.html"
   test -s "$site/sw.js"
+  # The page that brings designs over from the old address. Only stable: the old address hands them
+  # to this origin alone. The page warns about designs newer than the highest format this release reads.
+  if [ "$CHANNEL" = stable ]; then
+    cp extra/move-designs.html extra/move-designs.js "$site"/
+    reads="$(gh api "repos/$SOURCE/contents/crates/doc/src/format?ref=$tag" --jq '[.[] | select(.name | test("^v[0-9]+$")) | .name[1:] | tonumber] | max // empty' || true)"
+    if [ -n "$reads" ]; then
+      pending="$(gh api "repos/$SOURCE/contents/crates/doc/src/format/pending?ref=$tag" --jq '[.[] | select(.name | endswith(".rs"))] | length' || echo 0)"
+      [ "$pending" -gt 0 ] && reads=$((reads + 1))
+      sed -i "s/data-reads-format=\"\"/data-reads-format=\"$reads\"/" "$site/move-designs.html"
+    fi
+    echo "move page: release reads design formats up to ${reads:-unknown}"
+  fi
 else
   cat >"$site/index.html" <<'HTML'
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>SolidCraft release candidate</title><style>body{font:16px/1.5 system-ui,sans-serif;max-width:36rem;margin:15vh auto;padding:0 16px}</style></head><body><h1>No release candidate right now</h1><p><a href="https://app.solidcraft.io/">Open SolidCraft</a> or <a href="https://solidcraft.io/download/">see the downloads</a>.</p></body></html>
