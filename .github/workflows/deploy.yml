@@ -1,0 +1,50 @@
+# Publishes the stable web app from the web zip attached to the SolidCraft release.
+# Runs hourly and does nothing unless the release changed.
+name: Deploy
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Deploy even if this release is already live
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  CHANNEL: stable
+  SOURCE: tangency-labs/solidcraft
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble the site
+        id: site
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force || 'false' }}
+          PAGE_URL: ${{ vars.PAGE_URL }}
+        run: bash assemble.sh site
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.site.outputs.changed == 'true'
+        with:
+          path: site
+      - id: deployment
+        if: steps.site.outputs.changed == 'true'
+        uses: actions/deploy-pages@v4
