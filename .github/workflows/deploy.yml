@@ -1,8 +1,13 @@
 # Publishes the stable web app from the web zip attached to the SolidCraft release.
-# Runs hourly and does nothing unless the release changed.
+# SolidCraft's Pages workflow (the one that deploys docs.solidcraft.io/app/) writes the current
+# stable tag to release.txt here whenever it changes, so a new Latest release goes live in minutes.
+# The hourly run is the fallback: GitHub often runs scheduled workflows hours late. Every run does
+# nothing unless the release changed.
 name: Deploy
 
 on:
+  push:
+    branches: [main]
   schedule:
     - cron: "17 * * * *"
   workflow_dispatch:
